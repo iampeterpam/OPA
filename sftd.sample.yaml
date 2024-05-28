@@ -1,0 +1,99 @@
+# Sample configuration file for sftd, the Okta Privileged Access Server Agent
+# Copy this file to sftd.yaml and uncomment any customizations
+# you need to make.
+
+# ----------------------------------------
+# Enrollment Options
+# These options control how you add an enrollment token to your server.
+# ----------------------------------------
+# Forces the server agent to attempt to automatically enroll during the initial startup.
+#AutoEnroll: True 
+
+# Specifies the path to a separate file containing an enrollment token. The default value
+# depends on the operating system running the server agent. After the server is enrolled, 
+# the server agent deletes this token file.If using this option, you must manually create 
+# the token file and add an enrollment token created on the Okta Privileged Access platform. 
+#EnrollmentTokenFile: /var/lib/sftd/enrollment.token  
+
+# When AutoEnroll is set to True, this option specifies a URL used to automatically enroll 
+# the server. If the EnrollmentTokenFile option is also configured, this option is ignored.
+# Note: This option is only used by legacy installations not hosted by Okta Privileged 
+# Access instances. (default is unset)
+#InitialURL: 
+
+# ----------------------------------------
+# Log Options
+# This option controls how the gateway logs events.
+# ----------------------------------------
+# Controls the verbosity of the logs.Valid values include: warn, info, debug
+#LogLevel: INFO  
+
+# ----------------------------------------
+# Connection Options
+# These options control how the agent manages connections
+# ----------------------------------------
+# Specifies the network address (IPv4 or IPv6) used by clients to access servers with multiple
+# interfaces or behind DNATs. (default is unset)
+#AccessAddress: 
+
+# Specifies the interface used by clients to negotiate connections to the host. 
+# Example: AccessInterface: eth0
+#AccessInterface:  
+
+# Specifies a list of alternative server hostnames. These names can be used as targets for sft ssh.
+# Example: AltNames: ["web01", "web01.example.com"] 
+#AltNames: 
+
+# Specifies a bastion host used automatically by clients when connecting to this server. 
+# (default is unset)
+#Bastion: 
+
+# Specifies the path prefix to the files used for the server agent local buffer store. 
+# Individual buffer file names consist of the path prefix, followed by a period and an incremental 
+# number (for example, buffer.db.1). Buffer files are automatically removed after being synchronized.
+#BufferFile: /var/lib/sftd/buffer.db  
+
+# Specifies the name that clients should use when connecting to this host. This option overrides 
+# the name returned by the hostname command. Example: CanonicalName: "opa_linux_1"
+# (default is unset). 
+#CanonicalName: 
+
+# Specifies the URL of an HTTP CONNECT proxy that the server agent uses for outbound network 
+# connectivity to the Okta Privileged Access platform. Alternatively, the HTTPS_PROXY environment
+# variable can be used to configure this proxy. ForwardProxy: https://myproxydomain.com:8080 (default is unset)
+#ForwardProxy: 
+
+# Specifies the path to a file used to store the server URL of the server that it connects to.
+#ServerFile: /var/lib/sftd/device.server  
+
+# Specifies the path to the sshd configuration file.Note: The server agent modifies this file.
+#SSHDConfigFile: /etc/ssh/sshd_config 
+
+# Specifies a port to use when negotiating SSH connections. This option is only needed if the default 
+# port (22) isn't being used. This option tells the sft client (ScaleFT Client-Tools) how to connect 
+# to the sftd Agent (ScaleFT Server-Tools). You must also modify the sshd_config file on the server 
+# agent server to listen on the specified port. (default is unset)
+#SSHDPort: 
+
+# Specifies the path to a file used to store the secret authentication token for Okta Privileged Access.
+#TokenFile: /var/lib/sftd/device.token  
+
+# Specifies the path to a file used by the server agent to store a list of trusted SSH Certificate Authorities.
+#TrustedUserCAKeysFile: /var/lib/sftd/ssh_ca.pub  
+
+# ----------------------------------------
+# Access Broker Options
+# ----------------------------------------
+# Specifies a port used by clients to reach the access broker.
+#BrokerAccessPort: 4421  
+
+# Specifies the network address (IPv4 or IPv6) used by the access broker to listen for connections. 
+# By default, the access broker listens for connections on every available interface. (default is unset)
+#BrokerListenHost: 
+
+# Specifies a port used by the access broker to listen for connections.
+#BrokerListenPort: 4421  
+
+# Controls the operation status of the access broker. Set to True to restrict the access broker from running
+# on the server.Note: Disabling the access broker process isn't recommended on Windows. See Windows Internals. (default is unset)
+#DisableBroker: 
