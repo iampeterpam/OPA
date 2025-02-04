@@ -1,0 +1,71 @@
+#!/bin/bash
+set -e
+
+# Function to check if running as root
+check_root() {
+    if [ "$EUID" -ne 0 ]; then 
+        echo "Please run as root or with sudo"
+        exit 1
+    fi
+}
+
+# Function to validate IP address
+validate_ip() {
+    local ip=$1
+    if [ -z "$ip" ]; then
+        echo "Error: Failed to get IP address"
+        exit 1
+    fi
+    
+    if ! echo "$ip" | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$' >/dev/null; then
+        echo "Error: Invalid IP address format: $ip"
+        exit 1
+    fi
+}
+
+# Function to update configuration
+update_config() {
+    local config_file="/etc/sft/sftd.yaml"
+    local ip_address=$(hostname -i)
+    
+    # Validate IP
+    validate_ip "$ip_address"
+    
+    # Check if config file exists
+    if [ ! -f "$config_file" ]; then
+        echo "Error: Configuration file $config_file does not exist"
+        exit 1
+    fi
+    
+    # Check if AccessAddress already exists
+    if grep -q "^AccessAddress:" "$config_file"; then
+        echo "Warning: AccessAddress already exists in $config_file"
+        echo "Current configuration will not be modified"
+        exit 1
+    fi
+    
+    # Create backup
+    cp "$config_file" "${config_file}.backup"
+    
+    # Add AccessAddress
+    echo "AccessAddress: \"$ip_address\"" >> "$config_file"
+    
+    if [ $? -eq 0 ]; then
+        echo "Successfully added AccessAddress: \"$ip_address\" to $config_file"
+        echo "A backup of the original configuration has been created at ${config_file}.backup"
+    else
+        echo "Error: Failed to update configuration file"
+        cp "${config_file}.backup" "$config_file"
+        rm "${config_file}.backup"
+        exit 1
+    fi
+}
+
+# Main execution
+main() {
+    check_root
+    update_config
+}
+
+# Execute main function
+main
